@@ -45,6 +45,7 @@ Source lives under `src/` (the scaffold uses a `src` dir; `@/*` → `./src/*`).
 
 ## Current phase
 Phase 1 — Auth + project setup
+Phase 2 - Prisma
 
 ## What's done
 - Step 1: Clerk auth wired up — `src/proxy.ts` (clerkMiddleware, protects
