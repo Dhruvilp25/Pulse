@@ -51,7 +51,14 @@ Phase 1 — Auth + project setup
   `/dashboard`), `<ClerkProvider>` + header in `src/app/layout.tsx`, sign-in/
   sign-up catch-all routes, and a protected `src/app/dashboard` page. Keys go in
   `.env.local` (placeholders committed locally; replace with real Clerk keys).
+- Step 2a: Prisma 7 set up — `prisma/schema.prisma` (Project, ApiKey, Event,
+  Query, all projectId-scoped), client singleton in `src/lib/db.ts`. Prisma 7
+  uses the `prisma-client` generator → output to `src/generated/prisma`
+  (gitignored, regenerated via `postinstall`), and connects through the
+  `@prisma/adapter-pg` driver adapter. Env loads from `.env.local` via
+  `prisma.config.ts`. `DATABASE_URL` is still a placeholder.
 
 ## What I'm working on now
-- Step 2 (next): Prisma + schema (Project, ApiKey, Event, Query)
-- Step 3 (next): folder structure (lib, components, workers)
+- Step 2b (next): run the first migration (`npm run db:migrate`) — needs the
+  real Railway `DATABASE_URL` in `.env.local`.
+- Step 3 (next): remaining folder structure (components, workers)
