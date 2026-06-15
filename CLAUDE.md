@@ -62,6 +62,11 @@ Phase 2 - Prisma
   four tables on Railway Postgres (verified live). Note: use the **public**
   Railway URL (`*.proxy.rlwy.net`) for `DATABASE_URL`, not the `.internal` host —
   both local dev and Vercel are external to Railway's private network.
+- Step 3: folder structure scaffolded — `src/app/api/health/route.ts` (liveness
+  endpoint; establishes the route-handler convention), plus `src/components/`
+  and `workers/` created with READMEs describing their purpose.
 
 ## What I'm working on now
-- Step 3 (next): remaining folder structure (components, workers)
+- Phase 1 setup (auth + project structure) is complete. Next: Phase 2 features —
+  e.g. project CRUD + API-key generation, the `/api/ingest` route + Redis/BullMQ
+  queue, and the events worker.
