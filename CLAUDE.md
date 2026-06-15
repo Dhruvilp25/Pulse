@@ -57,9 +57,11 @@ Phase 2 - Prisma
   uses the `prisma-client` generator → output to `src/generated/prisma`
   (gitignored, regenerated via `postinstall`), and connects through the
   `@prisma/adapter-pg` driver adapter. Env loads from `.env.local` via
-  `prisma.config.ts`. `DATABASE_URL` is still a placeholder.
+  `prisma.config.ts`.
+- Step 2b: first migration applied — `prisma/migrations/<ts>_init` creates the
+  four tables on Railway Postgres (verified live). Note: use the **public**
+  Railway URL (`*.proxy.rlwy.net`) for `DATABASE_URL`, not the `.internal` host —
+  both local dev and Vercel are external to Railway's private network.
 
 ## What I'm working on now
-- Step 2b (next): run the first migration (`npm run db:migrate`) — needs the
-  real Railway `DATABASE_URL` in `.env.local`.
 - Step 3 (next): remaining folder structure (components, workers)
