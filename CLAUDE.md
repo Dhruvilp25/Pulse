@@ -66,7 +66,11 @@ Phase 2 - Prisma
   endpoint; establishes the route-handler convention), plus `src/components/`
   and `workers/` created with READMEs describing their purpose.
 
+- Phase 2 (started): Projects feature — `src/lib/projects.ts` (list/create,
+  scoped by clerkUserId), `createProjectAction` Server Action in
+  `src/app/dashboard/actions.ts` (re-checks auth), and `/dashboard` now lists the
+  user's projects + a create form.
+
 ## What I'm working on now
-- Phase 1 setup (auth + project structure) is complete. Next: Phase 2 features —
-  e.g. project CRUD + API-key generation, the `/api/ingest` route + Redis/BullMQ
-  queue, and the events worker.
+- Next Phase 2: API-key generation (bcrypt hash + prefix) per project, then the
+  `/api/ingest` route + Redis/BullMQ queue and the events worker.
