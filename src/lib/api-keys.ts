@@ -12,8 +12,18 @@ const PREFIX_LENGTH = KEY_PREFIX.length + 7;
 export function generateApiKey(): { token: string; prefix: string } {
   const secret = randomBytes(24).toString("base64url");
   const token = KEY_PREFIX + secret;
-  const prefix = token.slice(0, PREFIX_LENGTH);
-  return { token, prefix };
+  return { token, prefix: apiKeyPrefix(token) };
+}
+
+/** The key's public prefix — the handle we look it up by. Single source of
+ *  truth for the prefix length, shared by generation and authentication. */
+export function apiKeyPrefix(token: string): string {
+  return token.slice(0, PREFIX_LENGTH);
+}
+
+/** Cheap shape check to reject obviously-wrong tokens before touching the DB. */
+export function looksLikeApiKey(token: string): boolean {
+  return token.startsWith(KEY_PREFIX) && token.length > PREFIX_LENGTH;
 }
 
 export function hashApiKey(token: string): Promise<string> {

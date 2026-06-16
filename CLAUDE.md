@@ -78,6 +78,12 @@ Phase 2 - Prisma
   a generate-key form (Server Action + `useActionState` one-time reveal). Added
   `tsx` (dev) for running TS scripts/workers.
 
+- Phase 2: ingest auth + validation (Redis-free) — `authenticateApiKey` in
+  `src/lib/projects.ts` (prefix lookup → bcrypt verify → projectId; rejects
+  unknown/revoked/invalid), prefix helpers in `src/lib/api-keys.ts`, and pure
+  `validateEvent` in `src/lib/events.ts`. Verified against the live DB.
+
 ## What I'm working on now
-- Next Phase 2: `POST /api/ingest` (authenticate via API key → Redis queue),
-  then Redis/BullMQ + the events worker that flushes to Postgres.
+- Next Phase 2: the `POST /api/ingest` route (uses the above) → enqueue to
+  Redis/BullMQ, then the events worker that batch-flushes to Postgres. NEEDS a
+  Railway Redis instance + `REDIS_URL` in `.env.local`.

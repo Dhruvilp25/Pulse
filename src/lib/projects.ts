@@ -1,5 +1,11 @@
 import { prisma } from "@/lib/db";
-import { generateApiKey, hashApiKey } from "@/lib/api-keys";
+import {
+  generateApiKey,
+  hashApiKey,
+  verifyApiKey,
+  apiKeyPrefix,
+  looksLikeApiKey,
+} from "@/lib/api-keys";
 
 // Data access for projects and their API keys. Always scoped by the owning
 // user / project — callers pass ids resolved from Clerk's auth(), never
@@ -38,4 +44,22 @@ export function listApiKeysForProject(projectId: string) {
     where: { projectId },
     orderBy: { createdAt: "desc" },
   });
+}
+
+/** Resolve an incoming API key to its project. Used by the ingest endpoint to
+ *  authenticate requests: look up by prefix, then bcrypt-verify the full token.
+ *  Returns null for unknown, revoked, or invalid keys. */
+export async function authenticateApiKey(
+  token: string,
+): Promise<{ projectId: string; apiKeyId: string } | null> {
+  if (!looksLikeApiKey(token)) return null;
+
+  const apiKey = await prisma.apiKey.findUnique({
+    where: { prefix: apiKeyPrefix(token) },
+  });
+  if (!apiKey || apiKey.revokedAt) return null;
+
+  if (!(await verifyApiKey(token, apiKey.hashedKey))) return null;
+
+  return { projectId: apiKey.projectId, apiKeyId: apiKey.id };
 }
