@@ -71,6 +71,13 @@ Phase 2 - Prisma
   `src/app/dashboard/actions.ts` (re-checks auth), and `/dashboard` now lists the
   user's projects + a create form.
 
+- Phase 2: API keys per project — `src/lib/api-keys.ts` (generate/hash/verify
+  with **bcryptjs** — pure-JS bcrypt, serverless-safe; `pulse_sk_` token stored
+  as prefix + bcrypt hash, plaintext shown once), key data fns in
+  `src/lib/projects.ts`, and a detail page `src/app/dashboard/projects/[id]` with
+  a generate-key form (Server Action + `useActionState` one-time reveal). Added
+  `tsx` (dev) for running TS scripts/workers.
+
 ## What I'm working on now
-- Next Phase 2: API-key generation (bcrypt hash + prefix) per project, then the
-  `/api/ingest` route + Redis/BullMQ queue and the events worker.
+- Next Phase 2: `POST /api/ingest` (authenticate via API key → Redis queue),
+  then Redis/BullMQ + the events worker that flushes to Postgres.

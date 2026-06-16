@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { listProjectsForUser } from "@/lib/projects";
 import { createProjectAction } from "./actions";
@@ -32,7 +33,12 @@ export default async function DashboardPage() {
                 key={project.id}
                 className="flex items-center justify-between rounded-md border border-black/[.08] px-4 py-3 text-sm dark:border-white/[.145]"
               >
-                <span className="font-medium">{project.name}</span>
+                <Link
+                  href={`/dashboard/projects/${project.id}`}
+                  className="font-medium hover:underline"
+                >
+                  {project.name}
+                </Link>
                 <span className="text-zinc-500">
                   {project.createdAt.toLocaleDateString()}
                 </span>
