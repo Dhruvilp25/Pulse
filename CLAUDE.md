@@ -83,7 +83,14 @@ Phase 2 - Prisma
   unknown/revoked/invalid), prefix helpers in `src/lib/api-keys.ts`, and pure
   `validateEvent` in `src/lib/events.ts`. Verified against the live DB.
 
+- Phase 2: ingest producer — `POST /api/ingest` (`src/app/api/ingest/route.ts`)
+  authenticates by API key, validates, and enqueues to Redis via
+  `src/lib/queue.ts` (BullMQ "events" queue). Returns 202; never writes the DB
+  directly. ioredis is **pinned to 5.10.1** to match bullmq's exact dep (avoids a
+  dual-copy type clash). Verified against live Redis. `REDIS_URL` (public Railway
+  proxy) is in `.env.local`.
+
 ## What I'm working on now
-- Next Phase 2: the `POST /api/ingest` route (uses the above) → enqueue to
-  Redis/BullMQ, then the events worker that batch-flushes to Postgres. NEEDS a
-  Railway Redis instance + `REDIS_URL` in `.env.local`.
+- Next Phase 2: the events **worker** (`workers/`) — a BullMQ Worker consuming
+  the "events" queue and batch-flushing to Postgres ~every 5s (run with `tsx`).
+  Completes the ingest → Redis → Postgres pipeline.
