@@ -10,7 +10,8 @@
     "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "worker:events": "tsx workers/events-worker.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.4.3",

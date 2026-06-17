@@ -90,7 +90,12 @@ Phase 2 - Prisma
   dual-copy type clash). Verified against live Redis. `REDIS_URL` (public Railway
   proxy) is in `.env.local`.
 
+- Phase 2: events **worker** done — `workers/events-worker.ts` (BullMQ Worker,
+  buffers + batch `createMany` every 5s or 500 events; jobs ack only after they
+  persist, so a crash retries them). Run via `npm run worker:events` (tsx).
+  Verified the full pipeline end-to-end (enqueue → worker → Postgres row).
+
 ## What I'm working on now
-- Next Phase 2: the events **worker** (`workers/`) — a BullMQ Worker consuming
-  the "events" queue and batch-flushing to Postgres ~every 5s (run with `tsx`).
-  Completes the ingest → Redis → Postgres pipeline.
+- Phase 2 ingest pipeline is complete: ingest → Redis → worker → Postgres.
+  Next candidates: surface event counts / recent events on the project page, the
+  NL-to-SQL saved queries (OpenAI), or SSE real-time dashboard updates.
