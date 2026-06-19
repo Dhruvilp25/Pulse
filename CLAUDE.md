@@ -95,7 +95,11 @@ Phase 2 - Prisma
   persist, so a crash retries them). Run via `npm run worker:events` (tsx).
   Verified the full pipeline end-to-end (enqueue → worker → Postgres row).
 
+- Phase 2: events surfaced on the project page — `countEventsForProject` +
+  `listRecentEvents` in `src/lib/projects.ts`; the detail page shows total count
+  + the 10 most-recent events (newest first). Read funcs verified live.
+
 ## What I'm working on now
-- Phase 2 ingest pipeline is complete: ingest → Redis → worker → Postgres.
-  Next candidates: surface event counts / recent events on the project page, the
-  NL-to-SQL saved queries (OpenAI), or SSE real-time dashboard updates.
+- Phase 2 ingest pipeline + basic data display done. Next candidates: NL-to-SQL
+  saved queries (OpenAI; SELECT-only whitelist, projectId injected), charts
+  (Recharts), or SSE real-time dashboard updates.

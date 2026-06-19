@@ -1,7 +1,12 @@
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getProjectForUser, listApiKeysForProject } from "@/lib/projects";
+import {
+  getProjectForUser,
+  listApiKeysForProject,
+  countEventsForProject,
+  listRecentEvents,
+} from "@/lib/projects";
 import { NewApiKeyForm } from "./new-api-key-form";
 
 export default async function ProjectDetailPage({
@@ -14,7 +19,11 @@ export default async function ProjectDetailPage({
   const project = userId ? await getProjectForUser(id, userId) : null;
   if (!project) notFound();
 
-  const apiKeys = await listApiKeysForProject(project.id);
+  const [apiKeys, eventCount, recentEvents] = await Promise.all([
+    listApiKeysForProject(project.id),
+    countEventsForProject(project.id),
+    listRecentEvents(project.id),
+  ]);
 
   return (
     <main className="flex flex-1 flex-col gap-6 p-8">
@@ -24,6 +33,35 @@ export default async function ProjectDetailPage({
         </Link>
         <h1 className="text-2xl font-semibold tracking-tight">{project.name}</h1>
       </div>
+
+      <section className="flex flex-col gap-3">
+        <div className="flex items-baseline justify-between">
+          <h2 className="text-sm font-medium text-zinc-500">Events</h2>
+          <span className="text-sm text-zinc-500">
+            {eventCount.toLocaleString()} total
+          </span>
+        </div>
+        {recentEvents.length === 0 ? (
+          <p className="text-sm text-zinc-500">
+            No events yet — send one to{" "}
+            <code className="font-mono">POST /api/ingest</code> with an API key.
+          </p>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {recentEvents.map((event) => (
+              <li
+                key={event.id}
+                className="flex items-center justify-between rounded-md border border-black/[.08] px-4 py-3 text-sm dark:border-white/[.145]"
+              >
+                <code className="font-mono">{event.name}</code>
+                <span className="text-xs text-zinc-500">
+                  {event.timestamp.toLocaleString()}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       <section className="flex flex-col gap-3">
         <h2 className="text-sm font-medium text-zinc-500">API keys</h2>

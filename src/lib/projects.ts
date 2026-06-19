@@ -63,3 +63,15 @@ export async function authenticateApiKey(
 
   return { projectId: apiKey.projectId, apiKeyId: apiKey.id };
 }
+
+export function countEventsForProject(projectId: string) {
+  return prisma.event.count({ where: { projectId } });
+}
+
+export function listRecentEvents(projectId: string, limit = 10) {
+  return prisma.event.findMany({
+    where: { projectId },
+    orderBy: { timestamp: "desc" },
+    take: limit,
+  });
+}
