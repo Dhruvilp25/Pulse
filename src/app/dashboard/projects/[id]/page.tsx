@@ -6,8 +6,10 @@ import {
   listApiKeysForProject,
   countEventsForProject,
   listRecentEvents,
+  getEventCountsByDay,
 } from "@/lib/projects";
 import { NewApiKeyForm } from "./new-api-key-form";
+import { EventsChart } from "./events-chart";
 
 export default async function ProjectDetailPage({
   params,
@@ -19,10 +21,11 @@ export default async function ProjectDetailPage({
   const project = userId ? await getProjectForUser(id, userId) : null;
   if (!project) notFound();
 
-  const [apiKeys, eventCount, recentEvents] = await Promise.all([
+  const [apiKeys, eventCount, recentEvents, countsByDay] = await Promise.all([
     listApiKeysForProject(project.id),
     countEventsForProject(project.id),
     listRecentEvents(project.id),
+    getEventCountsByDay(project.id),
   ]);
 
   return (
@@ -41,6 +44,7 @@ export default async function ProjectDetailPage({
             {eventCount.toLocaleString()} total
           </span>
         </div>
+        {eventCount > 0 && <EventsChart data={countsByDay} />}
         {recentEvents.length === 0 ? (
           <p className="text-sm text-zinc-500">
             No events yet — send one to{" "}

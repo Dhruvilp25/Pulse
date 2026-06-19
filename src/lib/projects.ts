@@ -75,3 +75,31 @@ export function listRecentEvents(projectId: string, limit = 10) {
     take: limit,
   });
 }
+
+/** Daily event counts for the last `days` days (UTC), as a gap-filled series
+ *  suitable for a chart. projectId is bound as a query parameter. */
+export async function getEventCountsByDay(projectId: string, days = 14) {
+  const since = new Date();
+  since.setUTCHours(0, 0, 0, 0);
+  since.setUTCDate(since.getUTCDate() - (days - 1));
+
+  const rows = await prisma.$queryRaw<{ day: Date; count: bigint }[]>`
+    SELECT date_trunc('day', "timestamp") AS day, count(*) AS count
+    FROM "Event"
+    WHERE "projectId" = ${projectId} AND "timestamp" >= ${since}
+    GROUP BY day
+  `;
+
+  const counts = new Map(
+    rows.map((r) => [r.day.toISOString().slice(0, 10), Number(r.count)]),
+  );
+
+  const series: { date: string; count: number }[] = [];
+  for (let i = 0; i < days; i++) {
+    const d = new Date(since);
+    d.setUTCDate(since.getUTCDate() + i);
+    const key = d.toISOString().slice(0, 10);
+    series.push({ date: key, count: counts.get(key) ?? 0 });
+  }
+  return series;
+}

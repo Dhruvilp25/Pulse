@@ -99,7 +99,11 @@ Phase 2 - Prisma
   `listRecentEvents` in `src/lib/projects.ts`; the detail page shows total count
   + the 10 most-recent events (newest first). Read funcs verified live.
 
+- Phase 2: events chart — `getEventCountsByDay` (raw SQL `date_trunc`, gap-filled,
+  projectId bound as a param) in `src/lib/projects.ts` + a Recharts `EventsChart`
+  client component on the project page (14-day bar chart). Aggregation verified
+  live.
+
 ## What I'm working on now
-- Phase 2 ingest pipeline + basic data display done. Next candidates: NL-to-SQL
-  saved queries (OpenAI; SELECT-only whitelist, projectId injected), charts
-  (Recharts), or SSE real-time dashboard updates.
+- Next candidates: NL-to-SQL saved queries (OpenAI; needs `OPENAI_API_KEY`,
+  SELECT-only whitelist + injected projectId) or SSE real-time dashboard updates.
