@@ -104,6 +104,13 @@ Phase 2 - Prisma
   client component on the project page (14-day bar chart). Aggregation verified
   live.
 
+- NL-to-SQL (started): SQL **safety layer** — `src/lib/safe-sql.ts`.
+  `validateSelect` (node-sql-parser AST: single read-only SELECT, only the
+  `events` relation) + `runProjectQuery` (projectId injected via CTE, read-only
+  txn, statement timeout + LIMIT). Verified: rejects writes / other tables /
+  multi-statement, and cross-project isolation holds. No OpenAI key needed.
+
 ## What I'm working on now
-- Next candidates: NL-to-SQL saved queries (OpenAI; needs `OPENAI_API_KEY`,
-  SELECT-only whitelist + injected projectId) or SSE real-time dashboard updates.
+- Next NL-to-SQL slice: OpenAI generation (NL question → SQL over the `events`
+  schema) + query UI (save to the `Query` table, run via safe-sql, show results).
+  NEEDS `OPENAI_API_KEY` in `.env.local`.
