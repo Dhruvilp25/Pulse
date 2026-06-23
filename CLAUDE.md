@@ -110,7 +110,12 @@ Phase 2 - Prisma
   txn, statement timeout + LIMIT). Verified: rejects writes / other tables /
   multi-statement, and cross-project isolation holds. No OpenAI key needed.
 
+- SSE real-time: live event count — `createEventCountStream` in
+  `src/lib/event-stream.ts` (polls + emits on change), auth-gated route
+  `src/app/api/projects/[id]/stream`, and a `LiveEventCount` client component
+  (EventSource) on the project page. Stream logic verified live (1 → 2).
+
 ## What I'm working on now
-- Next NL-to-SQL slice: OpenAI generation (NL question → SQL over the `events`
-  schema) + query UI (save to the `Query` table, run via safe-sql, show results).
-  NEEDS `OPENAI_API_KEY` in `.env.local`.
+- NL-to-SQL still pending an `OPENAI_API_KEY` in `.env.local`: OpenAI generation
+  (NL → SQL over `events`) + query UI on top of the (already-built) safe-sql
+  layer.

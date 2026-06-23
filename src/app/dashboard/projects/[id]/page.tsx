@@ -10,6 +10,7 @@ import {
 } from "@/lib/projects";
 import { NewApiKeyForm } from "./new-api-key-form";
 import { EventsChart } from "./events-chart";
+import { LiveEventCount } from "./live-event-count";
 
 export default async function ProjectDetailPage({
   params,
@@ -40,9 +41,7 @@ export default async function ProjectDetailPage({
       <section className="flex flex-col gap-3">
         <div className="flex items-baseline justify-between">
           <h2 className="text-sm font-medium text-zinc-500">Events</h2>
-          <span className="text-sm text-zinc-500">
-            {eventCount.toLocaleString()} total
-          </span>
+          <LiveEventCount projectId={project.id} initial={eventCount} />
         </div>
         {eventCount > 0 && <EventsChart data={countsByDay} />}
         {recentEvents.length === 0 ? (
